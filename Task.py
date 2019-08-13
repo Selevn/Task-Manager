@@ -8,3 +8,6 @@ class Task:
     def add(self):
         pass
     #add it into 
+    def switch_status(self, end_status):
+        self.status = end_status
+        #update sql
