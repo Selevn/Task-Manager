@@ -9,10 +9,7 @@ class Task:
     
     def add(self):
         pass
-    #add it into 
-    def switch_status(self, end_status):
-        self.status = end_status
-        #update sql
+   
 
 class DataBase:
     
@@ -29,17 +26,35 @@ class DataBase:
             pass
     
     def add(self, header, body, status, table = 'tasks',):
-        self.cursor.execute('''SELECT * FROM {0} ORDER BY id DESC'''.format(table))
-        self.cursor.execute('''INSERT INTO {0} (id, header, body, status) VALUES (?, ?, ?, ?)'''.format(table), (self.cursor.fetchone()[0]+1, header, body, status))
-        self.conn.commit() 
+        self.cursor.execute('''SELECT id FROM {0} ORDER BY id DESC'''.format(table))
+        #print('q')
+        #print(self.cursor.fetchone())
+        try:
+            quit = self.cursor.fetchone()[0]
+        except TypeError:
+            quit = -1
+            
+        self.cursor.execute('''INSERT INTO {0} (id, header, body, status) VALUES (?, ?, ?, ?)'''.format(table), (quit+1, header, body, status))
+        self.conn.commit()
+        
+    def switch_status(self, id_, end_status, table = 'tasks'):
+        self.status = end_status
+        sqlrequest = '''UPDATE {0} SET status = '{1}' WHERE id = {2}'''.format(table, end_status, id_)
+        #print(sqlrequest)
+        self.cursor.execute(sqlrequest)
+        self.conn.commit()
     
     def get(self, id_, table = 'tasks'):
         strs = '''SELECT * FROM {0} WHERE id = {1} '''.format(table, id_)
-        print(strs)
         listt = self.cursor.execute(strs)
         for i in listt:
             quit = i
         return quit
+    
+    def get_all(self, table = 'tasks'):
+        strs = '''SELECT * FROM {0} ORDER BY id'''.format(table)
+        return self.cursor.execute(strs)
+        
     
         
     def dbclose(self):
@@ -49,7 +64,7 @@ class DataBase:
 
 q = DataBase('olddb.db')
 q.createtable()
-q.add(1, 'of', 'aq')
-q.add(2, 'of', 'aq')
-q.get(1)
+#q.add(1, 'of', 'aq')
+#q.add(2, 'of', 'aq')
+q.switch_status(2,'switched')
 q.dbclose()
