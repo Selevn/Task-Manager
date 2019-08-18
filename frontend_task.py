@@ -45,6 +45,19 @@ class Windowa():
         self.maintree.heading('Body', text = 'Body')
         self.maintree.heading('Status', text = 'Status')
         self.load_and_show_db()
+        self.load_header_buttons()
+        
+    def load_header_buttons(self):
+        self.add_but = tk.Button(self.toolbar, text = 'Add', font = 'Arial 14', command = self.add)
+        self.delete_but = tk.Button(self.toolbar, text = 'Delete', font = 'Arial 14')
+        self.to_daily_but = tk.Button(self.toolbar, text = 'Add to daily', font = 'Arial 14')
+        self.add_but.place(rely = 0.5, relx = 0.1, anchor = tk.CENTER, width = 110)
+        self.delete_but.place(rely = 0.5, relx = 0.3, anchor = tk.CENTER, width = 110)
+        self.to_daily_but.place(rely = 0.5, relx = 0.5, anchor = tk.CENTER, width = 110)
+        
+    def add(self):
+        Dialog()
+        
         
     def load_and_show_db(self):
         array = self.tasks.get_all()
@@ -70,7 +83,37 @@ class Windowa():
             messagebox.showinfo("Time to relax!", "Whatch out for 20 seconds please!")
             self.butstartwork.after(1200000, self.alert)
             
+class Dialog(tk.Toplevel):
+    def __init__(self):
+        super().__init__(root)
+        self.title('Add new task')
+        self.geometry('370x350')
+        self.resizable(False, False)
         
+        label1 = tk.Label(self, text = 'Header:', font = 'Arial 12')
+        label1.place(x = 20, y = 20)
+        label2 = tk.Label(self, text = 'Body:', font = 'Arial 12')
+        label2.place(x = 20, y = 50)
+        
+        entry1 = tk.Entry(self, font = 'Arial 12')
+        entry1.place(x = 100, y = 20)
+        entry2 = tk.Text(self, height = 10, width = 20, font = 'Arial 12')
+        entry2.place(x = 100, y = 50)
+        
+        add_but = tk.Button(self, text = "Add", font = 'Arial 12')
+        add_but.place(relx = 0.5, rely = 0.83, anchor = tk.CENTER, command = put)
+        
+        
+        
+        self.grab_set()
+        self.focus_set()  
+        
+    def put():
+        header = entry1.get()
+        body = entry2.get()
+        status = ''
+        
+        #self.add_window.mainloop()        
         
 
 
